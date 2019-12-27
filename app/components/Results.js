@@ -55,7 +55,7 @@ export default class Results extends React.Component {
     loading: true
   }
   componentDidMount () {
-    debugger
+    // debugger
     const { playerOne, playerTwo } = queryString.parse(this.props.location.search)
 
     battle([ playerOne, playerTwo ])
