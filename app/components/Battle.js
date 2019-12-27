@@ -70,7 +70,7 @@ function PlayerInput ({ onSubmit, label }) {
 
 
 PlayerInput.propTypes = {
-  onChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired
 }
 
