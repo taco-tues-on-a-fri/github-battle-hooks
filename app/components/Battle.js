@@ -6,79 +6,68 @@ import ThemeContext, { ThemeConsumer } from '../contexts/theme'
 import { Link } from 'react-router-dom'
 
 function Instructions () {
+  const theme = React.useContext(ThemeContext)
   return (
-    <ThemeConsumer>
-      {(theme) => (
-        <div className='instructions-container'>
-          <h1 className='center-text header-lg'>
-            Instructions
-          </h1>
-          <ol className='container-sm grid center-text battle-instructions'>
-            <li>
-              <h3 className='header-sm'>Enter two Github users</h3>
-              <FaUserFriends className={`bg-${theme}`} color='rgb(255, 191, 116)' size={140} />
-            </li>
-            <li>
-              <h3 className='header-sm'>Battle</h3>
-              <FaFighterJet className={`bg-${theme}`} color='#727272' size={140} />
-            </li>
-            <li>
-              <h3 className='header-sm'>See the winners</h3>
-              <FaTrophy className={`bg-${theme}`} color='rgb(255, 215, 0)' size={140} />
-            </li>
-          </ol>
-        </div>
-      )}
-    </ThemeConsumer>
+    <div className='instructions-container'>
+      <h1 className='center-text header-lg'>
+        Instructions
+      </h1>
+      <ol className='container-sm grid center-text battle-instructions'>
+        <li>
+          <h3 className='header-sm'>Enter two Github users</h3>
+          <FaUserFriends className={`bg-${theme}`} color='rgb(255, 191, 116)' size={140} />
+        </li>
+        <li>
+          <h3 className='header-sm'>Battle</h3>
+          <FaFighterJet className={`bg-${theme}`} color='#727272' size={140} />
+        </li>
+        <li>
+          <h3 className='header-sm'>See the winners</h3>
+          <FaTrophy className={`bg-${theme}`} color='rgb(255, 215, 0)' size={140} />
+        </li>
+      </ol>
+    </div>
   )
 }
 
-class PlayerInput extends React.Component {
-  state = {
-    username: ''
-  }
-  handleSubmit = (event) => {
-    event.preventDefault()
+function PlayerInput ({ onSubmit, label }) {
+  const [username, setUsername] = React.useState('')
 
-    this.props.onSubmit(this.state.username)
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    onSubmit(username)
   }
-  handleChange = (event) => {
-    this.setState({
-      username: event.target.value
-    })
-  }
-  render() {
-    return(
-      <ThemeConsumer>
-        {(theme) => (
-          <form className='column player' onSubmit={this.handleSubmit}>
-            <label htmlFor='username' className='player-label'>
-              {this.props.label}
-            </label>
-            <div className='row player-inputs'>
-              <input 
-                type='text'
-                id='username'
-                className={`input-${theme}`}
-                placeholder='github username'
-                autoComplete='off'
-                value={this.state.username}
-                onChange={this.handleChange}
-              />
-              <button 
-                className={`btn ${theme === 'dark' ? 'light-btn' : 'dark-btn'}`}
-                type='submit'
-                disabled={!this.state.username}
-              >
-                Submit
-              </button>
-            </div>
-          </form>
-        )}
-      </ThemeConsumer>
-    )
-  }
+
+  const handleChange = (event) => setUsername(event.target.value)
+  const theme = React.useContext(ThemeContext)
+
+  return(
+    <form className='column player' onSubmit={handleSubmit}>
+      <label htmlFor='username' className='player-label'>
+        {label}
+      </label>
+      <div className='row player-inputs'>
+        <input 
+          type='text'
+          id='username'
+          className={`input-${theme}`}
+          placeholder='github username'
+          autoComplete='off'
+          value={username}
+          onChange={handleChange}
+        />
+        <button 
+          className={`btn ${theme === 'dark' ? 'light-btn' : 'dark-btn'}`}
+          type='submit'
+          disabled={!username}
+        >
+          Submit
+        </button>
+      </div>
+    </form>
+  )
 }
+
 
 PlayerInput.propTypes = {
   onChange: PropTypes.func.isRequired,
