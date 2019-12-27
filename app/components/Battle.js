@@ -120,72 +120,64 @@ PlayerPreview.propTypes = {
   label: PropTypes.string.isRequired
 }
 
-export default class Battle extends React.Component {
-  state = {
-    playerOne: null,
-    playerTwo: null
-  }
-  handleSubmit = (id, player) => {
-    this.setState({
-      [id]: player
-    })
-  }
-  handleReset = (id) => {
-    this.setState({
-      [id]: null
-    })
-  }
-  render() {
-    const { playerOne, playerTwo } = this.state
+export default function Battle () {
+  const [playerOne, setPlayerOne] = React.useState(null)
+  const [playerTwo, setPlayerTwo] = React.useState(null)
 
-    
-    return (
-      <React.Fragment>
-        <Instructions />
+  const handleSubmit = (id, player) => id === 'playerOne'
+    ? setPlayerOne(player)
+    : setPlayerTwo(player)
 
-        <div className='player-container'>
-          <h1 className='center-text header-lg'>Players</h1>
-          <div className='row space-around'>
-            {playerOne === null 
+  const handleReset = (id) => id === 'playerOne'
+    ? setPlayerOne(null)
+    : setPlayerTwo(null)
+
+  return (
+    <React.Fragment>
+      <Instructions />
+
+      <div className='player-container'>
+        <h1 className='center-text header-lg'>Players</h1>
+        <div className='row space-around'>
+          {playerOne === null 
+          ? <PlayerInput
+              label='Player One'
+              onSubmit={(player) => handleSubmit('playerOne', player)}
+            />
+          : <PlayerPreview 
+              username={playerOne} 
+              label='Player One' 
+              onReset={() => handleReset('playerOne')} 
+            />
+          }
+
+          {playerTwo === null 
             ? <PlayerInput
-                label='Player One'
-                onSubmit={(player) => this.handleSubmit('playerOne', player)}
-              />
-            : <PlayerPreview 
-                username={playerOne} 
-                label='Player One' 
-                onReset={() => this.handleReset('playerOne')} 
-              />
-            }
-
-            {playerTwo === null 
-              ? <PlayerInput
-                  label='Player Two'
-                  onSubmit={(player) => this.handleSubmit('playerTwo', player)}
-              />
-            : <PlayerPreview 
-                username={playerTwo} 
-                label='Player Two' 
-                onReset={() => this.handleReset('playerTwo')} 
-              />
-            }
-          </div>
-
-
-          {playerOne && playerTwo && (
-            <Link
-              className='btn dark-btn btn-space'
-              to={{
-                pathname: '/battle/results',
-                search: `?playerOne=${playerOne}&playerTwo=${playerTwo}`
-              }}
-            >
-              Battle  
-            </Link>
-          )}
+                label='Player Two'
+                onSubmit={(player) => handleSubmit('playerTwo', player)}
+            />
+          : <PlayerPreview 
+              username={playerTwo} 
+              label='Player Two' 
+              onReset={() => handleReset('playerTwo')} 
+            />
+          }
         </div>
-        {/* <PlayerInput label="Label!" onSubmit={(value) => console.log('value!', value)} /> */}
-      </React.Fragment>
-    )
-  }
+
+
+        {playerOne && playerTwo && (
+          <Link
+            className='btn dark-btn btn-space'
+            to={{
+              pathname: '/battle/results',
+              search: `?playerOne=${playerOne}&playerTwo=${playerTwo}`
+            }}
+          >
+            Battle  
+          </Link>
+        )}
+      </div>
+      {/* <PlayerInput label="Label!" onSubmit={(value) => console.log('value!', value)} /> */}
+    </React.Fragment>
+  )
 }
